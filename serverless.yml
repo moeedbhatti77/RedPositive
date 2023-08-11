@@ -1,0 +1,21 @@
+org: moeedbhatti77
+app: redpositive
+service: redpositive
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  environment:
+    # DYNAMO_TABLE_NAME: ${self:custom.adsTableName}
+    DATABASE_NAME: ${param:DATABASE_NAME}
+    MONGO_DB_URL: ${param:MONGO_DB_URL}
+
+plugins:
+  - serverless-offline
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: "*"
