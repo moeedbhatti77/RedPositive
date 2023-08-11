@@ -5,6 +5,7 @@ import { config } from "dotenv";
 import apiRoutes from "./server/apis/index.cjs";
 import ErrorHandler from "./server/utils/Error/ErrorHandler.js";
 import morgan from "morgan";
+import serverless from "serverless-http";
 config();
 // Constants
 const isProduction = process.env.NODE_ENV === "production";
@@ -82,3 +83,4 @@ connect(`${process.env.MONGO_DB_URL}${process.env.DATABASE_NAME}`)
 app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });
+export const handler = serverless(app);
