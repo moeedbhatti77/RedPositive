@@ -3,6 +3,13 @@ app: redpositive
 service: redpositive
 frameworkVersion: "3"
 
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    packager: npm
+    packagePath: /home/moeed/sideProjects/practice/package.json
+
 provider:
   name: aws
   runtime: nodejs18.x
@@ -13,7 +20,7 @@ provider:
 
 plugins:
   - serverless-offline
-
+  - serverless-esbuild
 functions:
   api:
     handler: index.handler

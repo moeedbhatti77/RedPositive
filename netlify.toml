@@ -1,0 +1,8 @@
+# example netlify.toml
+[build]
+  command = "# no build command"
+  functions = "index.js"
+  publish = "public"
+
+[functions]
+  node_bundler = "esbuild" 
