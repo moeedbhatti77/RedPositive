@@ -19,11 +19,12 @@ function App() {
     setUsersData((prev) => prev.filter((item) => item._id !== id));
   });
   const addOrUpdate = useCallback(async (data) => {
+    console.log(data);
     if (!data._id) {
       await axios.post("/api/users", data);
-      data._id = Math.random().toString(36).substring(2, 7);  
+      data._id = Math.random().toString(36).substring(2, 7);
     } else {
-      await axios.put(`/api/users/${data._id}`);
+      await axios.put(`/api/users/${data._id}`, data);
     }
     setUsersData((prev) => [...prev, data]);
     fetchAll();

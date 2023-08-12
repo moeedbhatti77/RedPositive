@@ -43,9 +43,10 @@ async function updateUser(req, res) {
         .status(400)
         .json({ meta: { message: `Invalid ${validationRes.message}` } });
     }
-    await UserModel.findOneAndReplace(id, req.body);
-    return res.status(200).json({ meta: { message: "User Updated" }, user });
+    await UserModel.findOneAndReplace({ _id: id }, req.body);
+    return res.status(200).json({ meta: { message: "User Updated" } });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "error" });
   }
 }
