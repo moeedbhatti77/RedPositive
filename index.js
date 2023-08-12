@@ -3,9 +3,9 @@ import express from "express";
 import { connect } from "mongoose";
 import { config } from "dotenv";
 import apiRoutes from "./server/apis/index.cjs";
-import ErrorHandler from "./server/utils/Error/ErrorHandler.js";
+
 import morgan from "morgan";
-import serverless from "serverless-http";
+
 config();
 // Constants
 const isProduction = process.env.NODE_ENV === "production";
@@ -71,7 +71,7 @@ app.use("*", async (req, res) => {
     res.status(500).end(e.stack);
   }
 });
-app.use(ErrorHandler);
+
 connect(`${process.env.MONGO_DB_URL}${process.env.DATABASE_NAME}`)
   .then(() => {
     console.log("Connected to Database");

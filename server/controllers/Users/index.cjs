@@ -9,7 +9,7 @@ function validateUserData(body) {
     if (!(body?.number && validateNumber(body.number))) {
       return { message: "Number" };
     }
-    if (!body?.name) {
+    if (!body?.name.match(/^[a-zA-Z ]*$/)) {
       return { message: "Name" };
     }
     if (
@@ -36,7 +36,7 @@ async function updateUser(req, res) {
         },
       });
     }
-    let validationRes = validateUserData(req?.body);
+    const validationRes = validateUserData(req?.body);
 
     if (typeof validationRes === "object") {
       return res
@@ -46,13 +46,17 @@ async function updateUser(req, res) {
     await UserModel.findOneAndReplace({ _id: id }, req.body);
     return res.status(200).json({ meta: { message: "User Updated" } });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "error" });
+    console.log("Error in updating a user");
+    res.status(500).json({
+      meta: {
+        message: error.message,
+      },
+    });
   }
 }
 async function createUser(req, res) {
   try {
-    let validationRes = validateUserData(req?.body, res);
+    const validationRes = validateUserData(req?.body, res);
     if (typeof validationRes === "object") {
       return res
         .status(400)
@@ -62,9 +66,12 @@ async function createUser(req, res) {
     await user.save();
     return res.status(201).json({ meta: { message: "User Created" }, user });
   } catch (error) {
-    console.log(error);
-
-    res.status(500).json({ message: "error" });
+    console.log("Error in creating a user");
+    res.status(500).json({
+      meta: {
+        message: error.message,
+      },
+    });
   }
 }
 async function getAllUsers(req, res) {
@@ -72,7 +79,7 @@ async function getAllUsers(req, res) {
     const usersData = await UserModel.find();
     return res.status(200).json({ meta: { message: "data found" }, usersData });
   } catch (error) {
-    res.status(500).json({ message: "error" });
+    res.status(500).json({ message: error.message });
   }
 }
 async function deleteSingle(req, res) {

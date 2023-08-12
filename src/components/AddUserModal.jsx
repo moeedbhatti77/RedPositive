@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import "./styles/modal.css";
 import Button from "./Button";
+
+const validatePhoneNumber = (input_str) =>
+  /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.re.test(
+    input_str
+  );
+
 export default function AddUserModal({ toggleModal, prev = {}, addOrUpdate }) {
   const [data, setData] = useState(prev);
 
@@ -62,6 +68,10 @@ export default function AddUserModal({ toggleModal, prev = {}, addOrUpdate }) {
             <Button
               text="Submit"
               callBack={async (e) => {
+                if (!data.name.match(/^[a-zA-Z ]*$/)) {
+                  alert("Invalid Name");
+                  return;
+                }
                 if (
                   !data?.email?.match(
                     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -70,11 +80,24 @@ export default function AddUserModal({ toggleModal, prev = {}, addOrUpdate }) {
                   alert("Invalid Email");
                   return;
                 }
-                // if (!data?.number?.match(/^\d{10}$/)) {
-                //   alert("Invalid Number");
-                //   return;
-                // }
-
+                if (
+                  !/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(
+                    data.number
+                  )
+                ) {
+                  alert("Invalid Number");
+                  return;
+                }
+                if (
+                  !(
+                    data?.hobbies &&
+                    Array.isArray(data?.hobbies) &&
+                    data.hobbies.length > 0
+                  )
+                ) {
+                  alert("Invalid Input For Hobbies");
+                  return;
+                }
                 await addOrUpdate(data);
                 toggleModal();
               }}

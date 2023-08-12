@@ -19,15 +19,19 @@ function App() {
     setUsersData((prev) => prev.filter((item) => item._id !== id));
   });
   const addOrUpdate = useCallback(async (data) => {
-    console.log(data);
-    if (!data._id) {
-      await axios.post("/api/users", data);
-      data._id = Math.random().toString(36).substring(2, 7);
-    } else {
-      await axios.put(`/api/users/${data._id}`, data);
+    try {
+      if (!data._id) {
+        await axios.post("/api/users", data);
+        data._id = Math.random().toString(36).substring(2, 7);
+      } else {
+        await axios.put(`/api/users/${data._id}`, data);
+      }
+      setUsersData((prev) => [...prev, data]);
+      fetchAll();
+    } catch (error) {
+      console.log(error.message);
+      alert("Request failed");
     }
-    setUsersData((prev) => [...prev, data]);
-    fetchAll();
   });
   useEffect(() => {
     try {
@@ -44,7 +48,7 @@ function App() {
   };
   const handleToSend = (event, row) =>
     event?.target?.checked === true
-      ? setToSend([...toSend, row.id])
+      ? setToSend([...toSend, row])
       : setToSend((prev) => prev.filter((item) => item !== row.id));
 
   return (
@@ -72,7 +76,9 @@ function App() {
       <Button
         callBack={() => {
           window.open(
-            "mailto:info@redpositive.in?subject=Selected%20Users%20Data"
+            `mailto:info@redpositive.in?subject=${encodeURI(
+              "Selected Users Data"
+            )}&body=${JSON.stringify(toSend)}`
           );
         }}
         text="Send to Email"
